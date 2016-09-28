@@ -1,0 +1,11 @@
+/*  Pig script to get word count from a file */
+
+linewords = load '/inputfiles/wordcount' as (line:chararray);
+
+words = FOREACH linewords GENERATE FLATTEN(TOKENIZE(line)) AS word;
+
+grp = GROUP words by word;
+
+wordcount = FOREACH grp GENERATE group AS wordscount,COUNT(words) AS numofwords;
+
+STORE wordcount into '/output/wordscount';
